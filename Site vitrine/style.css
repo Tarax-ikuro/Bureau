@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+
+/* Enlever les marges du body par defaut */
+body{
+    margin: 0;
+    padding:0;
+font-family: "Montserrat", sans-serif;
+background-color: #ecf0f1;
+
+}
+
+/* Nav bar //////////////////////////////////////////*/
+nav{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+border-bottom: 5px solid #6e3300 ;
+}
+/* Stylisation du titre/// */
+nav h1{
+    /* color:  #85929e; */
+    color: #6e3300;
+    font-size:30px;
+}
+
+
+
+
+/* Onglets /////////////////*/
+
+nav .onglets{
+    margin-top: 3px;
+    margin-left: 350px;
+}
+
+
+nav .onglets a{
+ 
+ /* enlever le soulignement */
+    text-decoration: none;
+    color:maroon;
+    margin-right: 10px;
+    /* border-bottom: 1px solid maroon; */
+    padding-bottom: 3px;
+}
+
+/* HEADER ////////////////////////////*/
+
+header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: url('https://cdn.pixabay.com/photo/2016/03/26/18/23/bread-1281053_960_720.jpg');
+    background-size: cover;
+    color: black;   
+    padding: 60px;
+   font-size: 20px;
+font-family: cursive;
+}
+header h1{
+    color: white;
+    font-family: cursive;
+}
+header h4{
+    margin-top: 20px;
+    font-size: 25px;
+    text-align: center;
+    
+}
+header button{
+    padding: 10px 20px;
+    background-color: white;
+    color:black;
+    border:none;
+    font-size: 20px;
+    font-family: cursive;
+   cursor: pointer;
+    border-radius: 10px;
+}
+
+/* SECTION PRINCIPALE */
+.main{
+margin-top: 40px;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.main .content .card1{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.main .content .card1 .left{
+    flex: 0 0 30%;
+    padding: 17px;
+background-color: #6e3300;
+color:white;
+}
+
+.main .content .card1 .left button{
+    color: black;
+    background-color: white;
+    border:none;
+    font-size: 20px;
+    font-family: cursive;
+   cursor: pointer;
+   margin-top: 90px;
+    border-radius: 10px;
+padding: 10px 10px;
+}
+.main .content .card1 .left  h1{
+    color:white;
+    font-size: 30px;
+    
+}
+
+.main .content .card1 .left p{
+    margin-top: 20px;
+}
+
+
+
+
+
+.main .content .card1.right{
+    flex: 0 0 70%;
+}
+
+
+
+.main .content .card1 .right img{
+    height: 300px;
+    width: 400px;
+margin-top: 5px;
+}
+
+
+
+
+
+
+/* FOOTER //////////////////////////////////////////////////////////////////////////////////*/
+footer{
+    margin-top: 40px;
+    border-top:5px solid #6e3300;
+background-color: #6e3300;
+color: white;
+padding: 30px 100px;
+
+
+}
+
+
+footer .services{
+    max-width: 100px;
+
+}
+
+
+footer h1{
+    font-family: "Montserrat", sans-serif;
+
+   
+    
+}
+
+footer .service1{
+    margin-top: 10px;
+   
+}
+
+
+
+
+footer ul li a{
+    color: white;
+    text-decoration: none;
+}

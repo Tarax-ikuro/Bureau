@@ -1,0 +1,244 @@
+ce que j'ai fait :
+
+https://doc.ubuntu-fr.org/lamp
+
+ Cette méthode consiste à installer les paquets nécessaires pour Apache, PHP et MySQL :
+
+sudo apt install apache2 php libapache2-mod-php mysql-server php-mysql
+
+ Pour vérifier qu'on a bien installé la bonne version de PHP :
+php -v
+
+https://doc.ubuntu-fr.org/phpmyadmin
+
+sudo apt install phpmyadmin
+
+Lors de l'installation, il vous sera posé quelques questions auxquelles il faut répondre avec soin :
+
+    Créer la base de données phpmyadmin : oui
+
+    Définir un mot de passe pour l'utilisateur MySQL phpmyadmin : ***Mot de passe SIMPLE***
+
+    Choisir le serveur web à configurer automatiquement (utiliser les flèches du clavier ou la touche tab pour se déplacer et la barre d'espace pour sélectionner/désélectionner) : apache2
+    
+    phpMyAdmin devrait être accessible à l'adresse http://localhost/phpmyadmin
+
+
+ACCES ROOT
+
+sudo mysql
+
+Puis dans un éditeur de texte vous copiez/collez :
+
+CREATE USER 'nom_utilisateur_choisi'@'localhost' IDENTIFIED BY 'mot_de_passe_solide';
+GRANT ALL ON *.* TO 'nom_utilisateur_choisi'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+QUIT;
+
+Vous changez 'nom_utilisateur_choisi' et 'mot_de_passe_solide' au ligne 1 & 2 par un nom d'utilisateur SIMPLE ! Personnellement j'ai mis MARSEILLE et MARSEILLE en majuscule pour les deux
+
+Une fois que vous avez modifiez cela, vous copiez collez les 4 lignes dans votre terminal et vous faites Entrée
+
+Si vous avez le même problème que moi il est possible que vous ne puissiez pas accéder à http://localhost/phpmyadmin avec un message d'erreur :
+
+Not Found The requested URL was not found on this server. 
+Apache/2.4.41 (Ubuntu) Server at localhost Port 80
+
+Si c'est le cas vous suivez cela :
+
+https://medium.com/@sreebash/not-found-the-requested-url-was-not-found-on-this-server-c698d6ff48cb
+
+"I have had the same problems for a long day. The following command should work perfectly.
+
+I installed Lamp and phpmyadmin using:
+
+$ sudo apt install phpmyadmin
+
+Now, open your terminal and do the following two commands.
+
+    sudo -H gedit /etc/apache2/apache2.conf
+
+In this apache2.conf file add this following line anywhere:
+
+Include /etc/phpmyadmin/apache.conf
+
+2. Now, restart your apache
+
+/etc/init.d/apache2 restart
+
+Now, your http://localhost/phpmyadmin/ work properly"
+
+Vous lancez http://localhost/phpmyadmin/, vous entrez votre identifiant et votre mot de passe SIMPLE que vous avez créé
+
+Vous arrivez maintenant sur l'interface de phpMyAdmin
+
+Vous créez une nouvelle base de donnée avec un nom SIMPLE ! avec un interclassement de base utf8mb4_0900_ai_ci (vous verrez cela plus tard avec PHP)
+
+Maintenant vous allez installer Wordpress :
+
+https://doc.ubuntu-fr.org/wordpress
+
+sudo a2enmod rewrite
+
+Nous allons ensuite créer un hôte virtuel pour WordPress, dont la racine sera /var/www/wordpress :
+
+sudo nano /etc/apache2/sites-available/wordpress.conf
+
+Ce qui ouvre avec l'éditeur nano un fichier dans lequel nous allons coller :
+
+
+    <VirtualHost *:80>
+            ServerName wordpress.localhost
+            DocumentRoot /var/www/wordpress
+            <Directory /var/www/wordpress>
+                    AllowOverride all
+                    Require all granted
+            </Directory>
+            ErrorLog /var/log/apache2/error.wordpress.log
+            CustomLog /var/log/apache2/access.wordpress.log combined
+    </VirtualHost>
+
+Si un nom de domaine pointe sur le serveur, on l'indique à la place de wordpress.localhost pour la directive ServerName.
+(Ctrl+X puis O pour quitter en sauvegardant)
+
+Finalement, on active l'hôte virtuel et on recharge la configuration d'Apache :
+
+sudo a2ensite wordpress
+sudo systemctl reload apache2
+
+
+ Tout d'​abord téléchargeons la dernière version de WordPress :
+
+wget https://fr.wordpress.org/wordpress-latest-fr_FR.zip
+
+Ensuite nous allons extraire le contenu du zip à la racine de notre hôte virtuel (/var/www/wordpress dans cet exemple) :
+
+sudo unzip wordpress-latest-fr_FR.zip -d /var/www
+
+ WordPress devrait alors être accessible à l'​adresse http://wordpress.localhost/, et cette adresse nous redirige sur une interface qui nous permet de finaliser l'installation.
+
+Cliquez sur C'est parti ! et renseignez les différents champs :
+
+    Nom de la base de données : ***base de données que vous avez créé***
+    Identifiant : ***identifiant SIMPLE que vous avez créé***
+    Mot de passe : ***mot de passe SIMPLE que vous avez créé***
+    Adresse de la base de données : localhost
+    Préfixe des tables : wp_
+
+Après avoir cliqué sur Lancer l'installation, vous allez avoir un message qui vous demande de modifier wp-config.php ou de le créer en collant le texte ci-après :
+
+<?php
+/**
+ * La configuration de base de votre installation WordPress.
+ *
+ * Ce fichier est utilisé par le script de création de wp-config.php pendant
+ * le processus d’installation. Vous n’avez pas à utiliser le site web, vous
+ * pouvez simplement renommer ce fichier en « wp-config.php » et remplir les
+ * valeurs.
+ *
+ * Ce fichier contient les réglages de configuration suivants :
+ *
+ * Réglages MySQL
+ * Préfixe de table
+ * Clés secrètes
+ * Langue utilisée
+ * ABSPATH
+ *
+ * @link https://fr.wordpress.org/support/article/editing-wp-config-php/.
+ *
+ * @package WordPress
+ */
+
+// ** Réglages MySQL - Votre hébergeur doit vous fournir ces informations. ** //
+/** Nom de la base de données de WordPress. */
+define( 'DB_NAME', 'essai' );
+
+/** Utilisateur de la base de données MySQL. */
+define( 'DB_USER', 'MARSEILLE' );
+
+/** Mot de passe de la base de données MySQL. */
+define( 'DB_PASSWORD', 'MARSEILLE' );
+
+/** Adresse de l’hébergement MySQL. */
+define( 'DB_HOST', 'localhost' );
+
+/** Jeu de caractères à utiliser par la base de données lors de la création des tables. */
+define( 'DB_CHARSET', 'utf8mb4' );
+
+/**
+ * Type de collation de la base de données.
+ * N’y touchez que si vous savez ce que vous faites.
+ */
+define( 'DB_COLLATE', '' );
+
+/**#@+
+ * Clés uniques d’authentification et salage.
+ *
+ * Remplacez les valeurs par défaut par des phrases uniques !
+ * Vous pouvez générer des phrases aléatoires en utilisant
+ * {@link https://api.wordpress.org/secret-key/1.1/salt/ le service de clés secrètes de WordPress.org}.
+ * Vous pouvez modifier ces phrases à n’importe quel moment, afin d’invalider tous les cookies existants.
+ * Cela forcera également tous les utilisateurs à se reconnecter.
+ *
+ * @since 2.6.0
+ */
+define( 'AUTH_KEY',         '13*Gz_nv$ qLU^|^v0U0C-c(vkFs$UmIm3.)e?Tk4*<>sY))-..@-j8ghW/iv&h&' );
+define( 'SECURE_AUTH_KEY',  'v6_UH1szA]fCme$WWKM+m,CSR/qgbymkH/aq?hBVU0i=YpkKs(<):?ye*ix~Z5;H' );
+define( 'LOGGED_IN_KEY',    ' j4K5.K/>o[;?IT;Y3eBpab-YiE(9|P1_uqN7z}kpTY$~)%[_N> YUJ]C2C^6Y.U' );
+define( 'NONCE_KEY',        '~~;&RAFm&-wS|?(7jqf@sIhzY+t(qy5M}:/XtNv8ApZY!Arv*j7kNt Kbn[|%y}N' );
+define( 'AUTH_SALT',        'wt.&{go~b;)AjYF?$[J/s7(k8W*{J5$5XqqjVmCtN$9svQ cw2q&gBJpvO<^@#tE' );
+define( 'SECURE_AUTH_SALT', 'LVnbts?Lse[N.4cn|nDy8>{KWmY{{$i?uCjJE+6HkuG AV*B@45Gwn Y}@B<0i 5' );
+define( 'LOGGED_IN_SALT',   'X3l>(_o`X=|jZ9h( xCEm^z`8_t}*L]u/$|ieW$q[j7l?0oPq<~]oYmTCGnVb;< ' );
+define( 'NONCE_SALT',       '0E0;1Z{>WSOm_@nq[?V:oDDPdsQ>B^bw_7.`BI% (o^&(kW8.S&IPREgBmPrE{yt' );
+/**#@-*/
+
+/**
+ * Préfixe de base de données pour les tables de WordPress.
+ *
+ * Vous pouvez installer plusieurs WordPress sur une seule base de données
+ * si vous leur donnez chacune un préfixe unique.
+ * N’utilisez que des chiffres, des lettres non-accentuées, et des caractères soulignés !
+ */
+$table_prefix = 'wp_';
+
+/**
+ * Pour les développeurs : le mode déboguage de WordPress.
+ *
+ * En passant la valeur suivante à "true", vous activez l’affichage des
+ * notifications d’erreurs pendant vos essais.
+ * Il est fortement recommandé que les développeurs d’extensions et
+ * de thèmes se servent de WP_DEBUG dans leur environnement de
+ * développement.
+ *
+ * Pour plus d’information sur les autres constantes qui peuvent être utilisées
+ * pour le déboguage, rendez-vous sur le Codex.
+ *
+ * @link https://fr.wordpress.org/support/article/debugging-in-wordpress/
+ */
+define( 'WP_DEBUG', false );
+
+/* C’est tout, ne touchez pas à ce qui suit ! Bonne publication. */
+
+/** Chemin absolu vers le dossier de WordPress. */
+if ( ! defined( 'ABSPATH' ) )
+  define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+
+/** Réglage des variables de WordPress et de ses fichiers inclus. */
+require_once( ABSPATH . 'wp-settings.php' );
+
+-----------
+
+Sauf que vous serez en lecture seul et vous ne pouvez quasiment rien faire car vous n'êtes pas le root...
+
+Il faut donc utiliser la commande chmod sur le terminal, mais avant cela créer un fichier
+
+touch wp-config.php
+
+Vous ouvrez ce fichier dans votre éditeur, vous copiez collez le paragraphe plus haut (entre les pointillets mais sans les pointillez évidemment) et vous enregistrez
+
+cd /var/www/
+sudo chmod -R a+rx wordpress
+cd ..
+sudo mv wp-config.php /var/www/wordpress/
+
+Et magiqueeeeeeee cela fonctionne !
