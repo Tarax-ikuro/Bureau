@@ -138,6 +138,23 @@ padding: 10px 10px;
 margin-top: 5px;
 }
 
+/* Animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+/* Redefinition de la transformation */
+.reveal-visible{
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: 1s cubic-bezier(.5, 0, 0, 1);
+}
+
+
+
+
+
 
 
 
